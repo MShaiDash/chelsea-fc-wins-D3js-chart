@@ -24,4 +24,4 @@ data.json (optional) – Original dataset (inlined in current version for ease o
 
 🌐 Live Demo
 Visit the live chart here:
-https://MShaiDash.github.io
+https://mshaidash.github.io/chelsea-fc-wins-D3js-chart
