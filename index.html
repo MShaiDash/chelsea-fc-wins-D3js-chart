@@ -3,22 +3,156 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chelsea FC Season Wins</title>
+  <title>Chelsea FC's Wins & Losses</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
     body {
-      font-family: 'Helvetica Neue', sans-serif;
-      text-align: center;
+      font-family: sans-serif;
+      background-color: #fff;
       margin: 0;
-      background: white;
+      padding: 20px;
+      text-align: center;
     }
 
-    .chart-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px;
+    h2 {
+      margin-bottom: 40px;
+      color: #333;
     }
+
+    .axis text {
+      font-size: 12px;
+      fill: #333;
+    }
+
+    .axis path,
+    .axis line {
+      stroke: #ccc;
+    }
+
+    .bar-wins {
+      fill: #a8dadc;
+    }
+
+    .bar-losses {
+      fill: #f4a261;
+    }
+
+    .legend {
+      font-size: 14px;
+    }
+
+    .legend rect {
+      stroke-width: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Chelsea FC's Wins & Losses</h2>
+  <div id="chart"></div>
+
+  <script>
+    const data = [
+      {"year": 2010, "wins": 27, "losses": 6},
+      {"year": 2011, "wins": 21, "losses": 9},
+      {"year": 2012, "wins": 18, "losses": 10},
+      {"year": 2013, "wins": 22, "losses": 7},
+      {"year": 2014, "wins": 25, "losses": 6},
+      {"year": 2015, "wins": 26, "losses": 3},
+      {"year": 2016, "wins": 12, "losses": 12},
+      {"year": 2017, "wins": 30, "losses": 5},
+      {"year": 2018, "wins": 21, "losses": 10},
+      {"year": 2019, "wins": 21, "losses": 8},
+      {"year": 2020, "wins": 1,  "losses": 1}
+    ];
+
+    const margin = { top: 20, right: 20, bottom: 40, left: 40 };
+    const width = 800 - margin.left - margin.right;
+    const height = 400 - margin.top - margin.bottom;
+
+    const svg = d3.select("#chart")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const x0 = d3.scaleBand()
+      .domain(data.map(d => d.year))
+      .range([0, width])
+      .padding(0.2);
+
+    const x1 = d3.scaleBand()
+      .domain(["wins", "losses"])
+      .range([0, x0.bandwidth()])
+      .padding(0.05);
+
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(data, d => Math.max(d.wins, d.losses)) + 5])
+      .nice()
+      .range([height, 0]);
+
+    // Axes
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", `translate(0, ${height})`)
+      .call(d3.axisBottom(x0).tickFormat(d => `'${String(d).slice(2)}`));
+
+    svg.append("g")
+      .attr("class", "y axis")
+      .call(d3.axisLeft(y));
+
+    // Bars
+    svg.selectAll("g.bar-group")
+      .data(data)
+      .enter()
+      .append("g")
+      .attr("transform", d => `translate(${x0(d.year)},0)`)
+      .selectAll("rect")
+      .data(d => [
+        { key: "wins", value: d.wins },
+        { key: "losses", value: d.losses }
+      ])
+      .enter()
+      .append("rect")
+      .attr("x", d => x1(d.key))
+      .attr("y", d => y(d.value))
+      .attr("width", x1.bandwidth())
+      .attr("height", d => height - y(d.value))
+      .attr("class", d => d.key === "wins" ? "bar-wins" : "bar-losses");
+
+    // Legend
+    const legend = svg.append("g")
+      .attr("class", "legend")
+      .attr("transform", `translate(${width - 100}, 10)`);
+
+    const legendData = [
+      { key: "Wins", color: "#a8dadc" },
+      { key: "Losses", color: "#f4a261" }
+    ];
+
+    legend.selectAll("rect")
+      .data(legendData)
+      .enter()
+      .append("rect")
+      .attr("x", 0)
+      .attr("y", (d, i) => i * 25)
+      .attr("width", 18)
+      .attr("height", 18)
+      .attr("fill", d => d.color);
+
+    legend.selectAll("text")
+      .data(legendData)
+      .enter()
+      .append("text")
+      .attr("x", 24)
+      .attr("y", (d, i) => i * 25 + 13)
+      .text(d => d.key);
+  </script>
+
+</body>
+</html>
+
 
     .percentage {
       font-size: 64px;
