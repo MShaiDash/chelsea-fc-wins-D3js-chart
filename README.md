@@ -7,7 +7,7 @@ The data in this task is a .json file with the final season results of the Engli
 It is your task to turn this information into a chart. It could be a simple bar or line chart, or anything more complicated that you wish to create.
 
 ✅ Solution
-I created an interactive bar chart using D3.js that visualizes Chelsea FC’s wins and losses over the past 11 seasons (2010–2020), based on the provided JSON data.
+I created an interactive bar chart using D3.js that visualizes Chelsea FC’s wins and losses from 2010–2020, based on the provided JSON data.
 
 🎯 Chart Type: Vertical grouped bar chart
 
